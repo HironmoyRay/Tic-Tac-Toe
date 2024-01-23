@@ -16,9 +16,17 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
 
-  function handleClick(i) {
+  const winner = calculateWinner(squares);
+  let status;
 
-    if(squares[i]){
+  if (winner) {
+    status = `Winner: ${winner}`;
+  } else {
+    status = "Next Player " + (isXNext ? "X" : "O");
+  }
+
+  function handleClick(i) {
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
 
@@ -34,6 +42,7 @@ export default function Board() {
   }
   return (
     <>
+      <div>{status}</div>
       <div className="flex">
         <Square
           value={squares[0]}
@@ -80,7 +89,7 @@ export default function Board() {
   );
 }
 
-function calculateWinner(squares){
+function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -89,13 +98,12 @@ function calculateWinner(squares){
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6]
+    [2, 4, 6],
   ];
-  for(let i = 0; i < lines.length(); i++){
+  for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
 
-    if( squares[a] && squares[a] === squares[b] && squares[a] === squares[c] )
-    {
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
   }
