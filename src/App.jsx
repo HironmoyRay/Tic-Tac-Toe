@@ -41,7 +41,7 @@ function Board({ isXNext, squares, onPlay }) {
   }
   return (
     <>
-      <div>{status}</div>
+      <div className="text-center bg-gray-700 text-white">{status}</div>
       <div className="flex">
         <Square
           value={squares[0]}
@@ -91,12 +91,20 @@ function Board({ isXNext, squares, onPlay }) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [isXNext, setIsXNext] = useState(true);
+  const [currentMove, setCurrentMove] = useState(0);
 
-  const currentSquares = history[history.length - 1];
+  const currentSquares = history[currentMove];
 
   function handlePlay(nextSquares) {
     setIsXNext(!isXNext);
-    setHistory([...history, nextSquares]);
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+  }
+
+  function jumpTo(move) {
+    setCurrentMove(move);
+    setIsXNext(move % 2 === 0);
   }
 
   const moves = history.map((squares, move) => {
@@ -107,22 +115,22 @@ export default function Game() {
       description = `Go to start the Game`;
     }
     return (
-      <li key={move}>
-        <button>{description}</button>
+      <li key={move} className="bg-gray-700 text-white p-1 mb-1 rounded-sm">
+        <button onClick={() => jumpTo(move)}>{description}</button>
       </li>
     );
   });
 
   return (
-    <div>
-      <div>
+    <div className="flex justify-center p-4">
+      <div className="mr-16 ">
         <Board
           isXNext={isXNext}
           squares={currentSquares}
           onPlay={handlePlay}
         ></Board>
       </div>
-      <div>
+      <div className="border border-gray-400 p-2 text-lg">
         <ol>{moves}</ol>
       </div>
     </div>
