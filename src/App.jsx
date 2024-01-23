@@ -107,7 +107,7 @@ export default function Game() {
       description = `Go to start the Game`;
     }
     return (
-      <li>
+      <li key={move}>
         <button>{description}</button>
       </li>
     );
